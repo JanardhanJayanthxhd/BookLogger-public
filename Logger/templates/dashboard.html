@@ -20,18 +20,18 @@
                     <table class="book__table">
                         <thead class="table-head">
                             <tr class="table-row">
-                                <th class="table__heading nowrap">S. No.</th>
+                                <th class="table__heading nowrap">S. No.: ID</th>
                                 <th class="table__heading">Title</th>
                                 <th class="table__heading">Author</th>
                                 <th class="table__heading">Rating</th>
                                 <th class="table__heading">Functions</th>
-                                <th class="table__heading">ID</th>
+                                <th class="table__heading">Book info.</th>
                             </tr>
                         </thead>
                         <tbody class="table-body">
                             {% for i in range(number_of_books) %}
                             <tr class="table-row">
-                                <td class="table__data">{{ i + 1 }}</td>
+                                <td class="table__data">{{ i + 1 }}: {{ books[i].book_id }}</td>
                                 <td class="table__data book__title">{{ books[i].book_title }}</td>
                                 <td class="table__data nowrap">{{ books[i].book_author }}</td>
                                 <td class="table__data">{{ books[i].book_rating }}</td>
@@ -45,7 +45,7 @@
                                         </p>
                                     </div>
                                 </td>
-                                <td class="table__data">{{ books[i].book_id }}</td>
+                                <td class="table__data"><a class="site__link form__link" href="{{ url_for('more_info', book_id=books[i].book_id) }}" title="Google Books API">Books API</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -114,6 +114,15 @@ def remove(book_id):
     return redirect(url_for('dashboard'))
 
 
+@app.route('/more info/<int:book_id>')
+def more_info(book_id):
+    # returns the Google books data by requested book title
+    book_to_query = Books.query.filter_by(book_id=book_id).first().book_title
+    if book_to_query:
+        return jsonify(response=get_data(book_name=book_to_query)), 200
+    return jsonify(error='try again.'), 404
+
+
 # REST - API
 @app.route('/BL-api/get all')
 def get_all_books():
@@ -131,19 +140,25 @@ def get_all_books():
 GOOGLE_BOOKS_API_KEY = 'YOUR_GOOGLE_BOOKS_API_KEY'
 
 
-def get_data(isbn) -> dict:
+def get_data(isbn=None, book_name='') -> dict:
     """returns Google books API data"""
+    # Sample books api key
+    GOOGLE_BOOKS_API_KEY = 'AIzaSyCsysxweyXppVi7mTFoX1A4tF4jcRdTS1c'
     base_url = "https://www.googleapis.com/books/v1/volumes"
     params = {
-        'q': f'isbn:{isbn}',
+        'q': '',
         'key': GOOGLE_BOOKS_API_KEY,
         'printType': 'books'
     }
+    if isbn:
+        params['q'] = f'isbn:{isbn}'
+    elif book_name:
+        params['q'] = f'title:{book_name}'
     response = requests.get(url=base_url, params=params)
     if response.status_code == 200:
         data = response.json()
         return data
-    return {}
+    return {'Invalid': 'Check your Google Books api key & try again'}
 
 
 @app.route('/BL-api/get info/')
@@ -153,7 +168,7 @@ def get_book_info():
     api_key = request.args.get('api_key')
     owner = Users.query.filter_by(api_key=api_key).first()
     if owner:
-        book_data = get_data(request.args.get('isbn'))
+        book_data = get_data(isbn=request.args.get('isbn'))
         if book_data:
             return jsonify(response=book_data), 200
     return jsonify(error='Check your API key & try again.'), 404
