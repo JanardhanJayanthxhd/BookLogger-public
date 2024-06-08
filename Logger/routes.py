@@ -4,6 +4,7 @@ from flask import render_template, redirect, url_for, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 import string
 import secrets
+import requests
 
 
 @app.route('/')
@@ -127,18 +128,34 @@ def get_all_books():
     return jsonify(error='Check your API key & try again.'), 404
 
 
+GOOGLE_BOOKS_API_KEY = 'YOUR_GOOGLE_BOOKS_API_KEY'
+
+
+def get_data(isbn) -> dict:
+    """returns Google books API data"""
+    base_url = "https://www.googleapis.com/books/v1/volumes"
+    params = {
+        'q': f'isbn:{isbn}',
+        'key': GOOGLE_BOOKS_API_KEY,
+        'printType': 'books'
+    }
+    response = requests.get(url=base_url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    return {}
+
+
 @app.route('/BL-api/get info/')
 def get_book_info():
-    """response : info about requested book in db.
-    params{api_key : users_api_key, book: name of the book}"""
+    """response : info about requested book by its ISBN 10 from Google Books API.
+    params{api_key : users_api_key, isbn: ISBN-10 number of the book}"""
     api_key = request.args.get('api_key')
     owner = Users.query.filter_by(api_key=api_key).first()
     if owner:
-        requested_book = request.args.get('book')
-        books = Books.query.filter(Books.book_title.like('%' + requested_book + '%'))
-        books = books.filter_by(owner_id=owner.id).order_by(Books.book_id).all()
-        print(books)
-        return jsonify(response=[book.to_dict() for book in books]), 200
+        book_data = get_data(request.args.get('isbn'))
+        if book_data:
+            return jsonify(response=book_data), 200
     return jsonify(error='Check your API key & try again.'), 404
 
 
