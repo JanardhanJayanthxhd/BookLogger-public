@@ -1,0 +1,27 @@
+{% include 'header.html' %}
+
+            <h3 class="header__title">&gt; Add</h3>
+        </header>
+        <main class="main container">
+            <h2>Add a new book to your Log</h2>
+            <form class="form" action="{{ url_for('add') }}" method="POST">
+                <fieldset class="form__fieldset">
+                    <p class="form__p">
+                        <label class="form__label" for="bookname">BookName</label>
+                        <input required class="form__input" type="text" name="bookname" id="bookname">
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="authorname">AuthorName</label>
+                        <input required class="form__input" type="text" name="authorname" id="authorname">
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="bookrating">Rating</label>
+                        <input required class="form__input" type="number" name="bookrating" id="bookrating" min="-10" max="10">
+                    </p>
+                </fieldset>
+                <p class="btn__p">
+                    <button class="btn" type="submit">Add</button>
+                </p>
+            </form>
+        </main>
+{% include 'footer.html' %}

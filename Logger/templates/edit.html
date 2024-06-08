@@ -1,0 +1,27 @@
+{% include 'header.html' %}
+
+            <h3 class="header__title">&gt; Edit</h3>
+        </header>
+        <main class="main container">
+            <h3 class="text-center">The current book details</h3>
+            <form class="form" action="{{ url_for('edit', book_id=current_book.book_id ) }}" method="POST">
+                <fieldset class="form__fieldset">
+                    <p class="form__p">
+                        <label class="form__label" for="bookname">BookName</label>
+                        <input required class="form__input" type="text" name="bookname" id="bookname" value="{{ current_book.book_title }}">
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="authorname">AuthorName</label>
+                        <input required class="form__input" type="text" name="authorname" id="authorname" value="{{ current_book.book_author }}">
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="bookrating">Rating</label>
+                        <input required class="form__input" type="number" name="bookrating" id="bookrating" min="-10" max="10" value="{{ current_book.book_rating }}">
+                    </p>
+                </fieldset>
+                <p class="btn__p">
+                    <button class="btn" type="submit">Update</button>
+                </p>
+            </form>
+        </main>
+{% include 'footer.html' %}

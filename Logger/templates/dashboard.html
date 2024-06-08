@@ -1,0 +1,98 @@
+{% include 'header.html' %}
+
+            <h3 class="header__title">&gt; Dashboard</h3>
+        </header>
+        <main class="main">
+            <section class="container">
+                <h2 class="site__title-h2">
+                    <span class="nowrap">
+                        Good <span id="greeter"></span>
+                    </span>{{ current_user.name }}
+                </h2>
+                <div class="link-container">
+                    <a id="copyLink" data-text="{{ current_user.api_key }}" class="form__link" >Copy API key</a>
+                </div>
+            </section>
+
+            <section class="container">
+                <div class="book-container">
+                    {% if books %}
+                    <table class="book__table">
+                        <thead class="table-head">
+                            <tr class="table-row">
+                                <th class="table__heading nowrap">S. No.</th>
+                                <th class="table__heading">Title</th>
+                                <th class="table__heading">Author</th>
+                                <th class="table__heading">Rating</th>
+                                <th class="table__heading">Functions</th>
+                                <th class="table__heading">ID</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            {% for i in range(number_of_books) %}
+                            <tr class="table-row">
+                                <td class="table__data">{{ i + 1 }}</td>
+                                <td class="table__data book__title">{{ books[i].book_title }}</td>
+                                <td class="table__data nowrap">{{ books[i].book_author }}</td>
+                                <td class="table__data">{{ books[i].book_rating }}</td>
+                                <td class="table__data">
+                                    <div class="btn-container">
+                                        <p class="btn__p">
+                                            <a href="{{ url_for('edit', book_id=books[i].book_id) }}" class="btn-a">Edit</a>
+                                        </p>
+                                        <p class="btn__p">
+                                            <a href="{{ url_for('remove', book_id=books[i].book_id) }}" class="btn-a">Remove</a>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="table__data">{{ books[i].book_id }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-center">Add books to get started.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="container">
+                <div class="btn-container">
+                    <p class="btn__p">
+                        <a href="{{ url_for('add') }}" class="btn-a">Add book!</a>
+                    </p>
+                    <p class="btn__p">
+                        <a href="{{ url_for('logout') }}" class="btn-a">Log out</a>
+                    </p>
+                </div>
+            </section>
+
+        </main>
+        <footer class="footer container">
+            <p class="footer__content">&copy;<time id="year"></time> BookLogger. <a target="_blank" class="form__link site__link" href="https://documenter.getpostman.com/view/26669589/2sA3XJmk7R#57107deb-f570-40f4-b208-b98f0d96c356">API</a></p>
+        </footer>
+    </div>
+</body>
+
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            alert("Successfully copied API key to clipboard");
+        }).catch(function(error) {
+            alert("Failed to copy API key" + error);
+        });
+    }
+
+    // Add event listener to the anchor element
+    document.addEventListener("DOMContentLoaded", function() {
+        const copyLink = document.getElementById("copyLink");
+
+        copyLink.addEventListener("click", function(event) {
+            event.preventDefault();  // Prevent the default action (navigation)
+            const text = copyLink.getAttribute("data-text");
+            copyToClipboard(text);
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,54 @@
+{% include 'header.html' %}
+
+            <h3 class="header__title">&gt; Register</h3>
+        </header>
+        <main class="main container">
+            <form class="form" action="{{ url_for('register') }}" method="POST">
+                <fieldset class="form__fieldset">
+                    <p class="form__p">
+                        <label class="form__label" for="username">UserName</label>
+                        <input required class="form__input" type="text" name="username" id="username">
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="password">Password</label>
+                        <div class="password__input">
+                            <input required class="form__input" type="password" name="password" id="password">
+                            <img id="pwd-visibility" src="{{ url_for('static', filename='img/visibility_off.png') }}" alt="visibility off" width="24" height="24">
+                        </div>
+                    </p>
+                    <p class="form__p">
+                        <label class="form__label" for="email">Email</label>
+                        <input required class="form__input" type="email" name="email" id="email">
+                    </p>
+                </fieldset>
+                <p class="btn__p">
+                    <button class="btn" type="submit">Register</button>
+                </p>
+
+            </form>
+            <div class="link-container">
+                <a class="form__link" href="{{ url_for('login') }}">Already have an account</a>
+            </div>
+        </main>
+        <footer class="footer container">
+            <p class="footer__content">&copy;<time id="year"></time> BookLogger. <a target="_blank" class="form__link site__link" href="https://documenter.getpostman.com/view/26669589/2sA3XJmk7R#57107deb-f570-40f4-b208-b98f0d96c356">API</a></p>
+        </footer>
+    </div>
+</body>
+
+<script src="main.js" defer></script>
+<!-- Password visibiliy toggler -->
+<script>
+    let eyeIcon = document.getElementById("pwd-visibility");
+    let passwordInput = document.getElementById("password");
+
+    eyeIcon.addEventListener("click", function(){
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        const src = eyeIcon.getAttribute("src") === "{{ url_for('static', filename='img/visibility_off.png') }}" ? "{{ url_for('static', filename='img/visibility.png') }}" : "{{ url_for('static', filename='img/visibility_off.png') }}";
+        eyeIcon.setAttribute("src", src)
+    });
+
+</script>
+
+</html>
